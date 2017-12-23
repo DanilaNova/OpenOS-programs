@@ -1,0 +1,102 @@
+--Библиотеки и прочая хрень
+local computer = require("computer")
+local component = require("component")
+local term = require("term")
+local colors = require("colors")
+local gpu = component.gpu
+local info = "MineTerm v1.1.0.0(Beta)\nСоздатель - Nova23"
+local musicnotes = {784, 880, 988, 1175, 1175, 1319, 1175, 988, 784, 784, 880, 988, 988, 880, 784, 880}
+local music_startup = {800, 1200, 1000, 800, 1000, 800, 1200}
+local starttime = os.time()
+local filesystem = require("filesystem")
+
+--Функции
+function musicbox(music, file)
+  if(music == "startup") then
+    file:write("startup.\n")
+    file:flush()
+    for i = 1, #music_startup do
+      computer.beep(music_startup[i],0.2)
+    end
+  elseif(music == "bells") then
+    file:write("bells.\n")
+    file:flush()
+    for i = 1, #musicnotes do
+      computer.beep(musicnotes[i],0.2)
+    end
+  else
+    file:write(music .. "(неизвестная музыка.)\n")
+    file:flush()
+    print("Неизвестная музыка.")
+  end
+end
+function check(cmd, file)
+  if(cmd == "info") then
+    file:write("Запрос информации.\n")
+    file:flush()
+    gpu.setForeground(0xFF0000)
+    print("Внимание!Программа находится в ранней стадии разработки.")
+    gpu.setForeground(0xFFFFFF)
+    print(info)
+    cmnd(file)
+  elseif(cmd == "music") then
+    file:write("Запрос музыки: ")
+    file:flush()
+    print("Музыка:\nstartup , bells\nВыберите музыку:")
+    musica = io.read()
+    musicbox(musica, file)
+    cmnd(file)
+  elseif(cmd == "help") then
+    file:write("Запрос списка комманд.\n")
+    file:flush()
+    print("help - помошь\ninfo - информация о программе\nmusic - выбрать музыку\nexit - выйти.")
+    cmnd(file)
+  elseif(cmd == "exit") then
+    file:write("Выход из терминала.\n")
+    file:flush()
+    computer.beep(1000,0.2)
+    gpu.setBackground(0x000000)
+    gpu.setForeground(0XFFFFFF)
+    computer.beep(500,0.2)
+    term.clear()
+  else
+    file:write("Нейзвестная комманда:" .. cmd .. "\n")
+    file:flush()
+    print("Такой коммманды не существует.")
+    cmnd(file)
+  end
+end
+function cmnd(logfile)
+  command = io.read()
+  computer.beep(1000,0.05)
+  check(command, logfile)
+end
+
+--Запуск
+term.clear()
+print("Запуск терминала...")
+local file = io.open("log-" .. starttime, "w")
+file:write(starttime .. "\n")
+file:write("Терминал запущен.\n")
+file:flush()
+gpu.setBackground(0x0000AA)
+gpu.setForeground(0xFFFFFF)
+term.clear()
+computer.beep(800,0.15)
+print("|-------------------------------------------------------------|")
+computer.beep(1200,0.15)
+print("|                           ____  ______  ____   ___          |")
+computer.beep(1000,0.15)
+print("|    /|  /|     /   /|  /  /        /    /      /  /  /|  /|  |")
+computer.beep(800,0.15)
+print("|   / | / |    /   / | /  /____    /    /____  /__/  / | / |  |")
+computer.beep(1000,0.15)
+print("|  /  |/  |   /   /  |/  /____    /    /____  / |   /  |/  |  |")
+computer.beep(800,0.15)
+print("|                                                             |")
+computer.beep(1200,0.25)
+print("|-------------------------------------------------------------|")
+print("Здравствуйте, бетатестер,\nВведите комманду(help - помощь):")
+cmnd(file)
+file:write("\nОшибок нет")
+file:close()
