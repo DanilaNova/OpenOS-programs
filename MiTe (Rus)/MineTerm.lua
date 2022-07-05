@@ -21,7 +21,7 @@ local minreq = {["ColorDepth"] = 4, ["Memory"] = 6000}
 function checkreq() --Сравнивание характерискик компьютера
 	if(gpu.maxDepth()<minreq["ColorDepth"]) then
 		return 1
-	elseif(computer.totalMemory()<minreq["Memory"])
+	elseif(computer.totalMemory()<minreq["Memory"]) then
 		return 2
 	else
 		return 0
@@ -130,9 +130,9 @@ term.clear()
 print("Запуск терминала...")
 local req = checkreq()
 if(req ~= 0) then
-  if(req = 1) then
+  if(req == 1) then
     error("Для нормальной работы нужна глубина цвета как минимум "..minreq["ColorDepth"]..".",0)
-  elseif(req = 2) then
+  elseif(req == 2) then
     error("Для нормальной работы нужно как минимум ".. math.round(minreq["Memory"]/1000) .."кб памяти",0)
   else
     error("Несоответствие требований. Подробности неизветсны. Код ошибки 1"..req)
